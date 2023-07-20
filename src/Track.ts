@@ -1,7 +1,34 @@
 import WaveSurfer from 'wavesurfer.js';
 
-export default class Track {
-  constructor({ audioContext, stereoPannerNode, name }) {
+export type TTrack = {
+  name: string;
+  audioContext: Record<string, unknown>;
+  audioSource?: Record<string, unknown>;
+  audioBuffer?: Record<string, unknown>;
+  stereoPannerNode: unknown;
+  ready: boolean;
+  gainNode: unknown;
+  gainValue: number;
+  active: boolean;
+  playing: boolean;
+}
+
+type TTrackConstructorPropNames = 'name' | 'audioContext' | 'stereoPannerNode';
+type TTrackConstructorProps = Pick<TTrack, TTrackConstructorPropNames>;
+
+export default class Track implements TTrack {
+  name: string;
+  audioContext: Record<string, unknown>;
+  audioSource?: Record<string, unknown>;
+  audioBuffer?: Record<string, unknown>;
+  stereoPannerNode: unknown;
+  ready: boolean;
+  gainNode: unknown;
+  gainValue: number;
+  active: boolean;
+  playing: boolean;
+
+  constructor({ name, audioContext, stereoPannerNode }: TTrackConstructorProps) {
     this.name = name;
     this.audioContext = audioContext;
     this.stereoPannerNode = stereoPannerNode;
@@ -12,7 +39,7 @@ export default class Track {
     this.playing = false;
   }
 
-  async init(arrayBuffer) {
+  async init(arrayBuffer: any) {
     const audioBuffer = await new Promise(res =>
       this.audioContext.decodeAudioData(arrayBuffer, res)
     );
@@ -40,12 +67,12 @@ export default class Track {
     this.playing = true;
   }
 
-  pause(when) {
+  pause(when?: number) {
     this.audioSource.stop(when);
     this.playing = false;
   }
 
-  stop(when) {
+  stop(when?: number) {
     this.audioSource.stop(when);
     this.playing = false;
   }

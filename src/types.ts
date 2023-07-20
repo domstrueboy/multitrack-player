@@ -1,0 +1,1 @@
+export type TPlayingState = 'playing' | 'suspended' | 'stopped';
