@@ -18,7 +18,13 @@
 </template>
 
 <script>
+import { useAppStore } from '@/store/app';
+
 export default {
+  setup() {
+    const app = useAppStore();
+    return { app };
+  },
   data() {
     return {
       version: process.env.PACKAGE_VERSION
@@ -27,10 +33,10 @@ export default {
   computed: {
     dialog: {
       get() {
-        return this.$store.state.dialog === 'about';
+        return this.app.dialog === 'about';
       },
       set() {
-        return this.$store.dispatch('toggleAboutDialog');
+        return this.app.toggleAboutDialog();
       }
     }
   }

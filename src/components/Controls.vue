@@ -11,14 +11,14 @@
     <VBtn
       v-if="controlEditMode"
       small
-      @click="$store.dispatch('toggleControlEditMode')"
+      @click="app.toggleControlEditMode()"
       >Done mapping</VBtn
     >
     <VBtn
       icon
       @click="mapControlOrDispatchAction('playPause')"
       :title="getControlMappingName('playPause')"
-      :color="$store.state.playState === 'playing' ? 'yellow' : 'green'"
+      :color="app.playState === 'playing' ? 'yellow' : 'green'"
     >
       <VIcon>{{ playPauseIcon }}</VIcon>
     </VBtn>
@@ -27,14 +27,14 @@
       @click="mapControlOrDispatchAction('stop')"
       :title="getControlMappingName('stop')"
       color="red"
-      :disabled="$store.state.playState === 'stopped'"
+      :disabled="app.playState === 'stopped'"
     >
       <VIcon>{{ mdiStop }}</VIcon>
     </VBtn>
 
     <VBtn
       icon
-      :outlined="$store.state.clickActive"
+      :outlined="app.clickActive"
       @click="mapControlOrDispatchAction('clickActive', 'toggleClickActive')"
       :title="getControlMappingName('clickActive')"
       :color="getControlMappingColor('clickActive')"
@@ -43,7 +43,7 @@
     </VBtn>
 
     <TextField v-model="clickBpm" class="small-input" />
-    <TextField v-model="clickTimeSignature" class="small-input" />
+    <TextField v-model="clickTimeSignatureView" class="small-input" />
 
     <Clock
       :values="timeValues"
@@ -54,16 +54,17 @@
 
     <Clock :values="beatsValues" :icon="mdiMusicNote" @input="setBeats" />
 
-    <VBtn text icon @click="$store.dispatch('toggleSettingsDialog')">
+    <VBtn text icon @click="app.toggleSettingsDialog()">
       <VIcon>{{ mdiWrench }}</VIcon>
     </VBtn>
-    <VBtn text icon @click="$store.dispatch('toggleAboutDialog')">
+    <VBtn text icon @click="app.toggleAboutDialog()">
       <VIcon>{{ mdiInformation }}</VIcon>
     </VBtn>
   </VRow>
 </template>
 
 <script>
+import { storeToRefs } from 'pinia';
 import Clock from './Clock';
 import TextField from './TextField';
 import {
@@ -74,6 +75,7 @@ import {
   mdiMusicNote,
   mdiClockOutline
 } from '@mdi/js';
+import { useAppStore } from '@/store/app';
 
 import { getClickInterval } from '../click';
 
@@ -81,6 +83,11 @@ export default {
   components: {
     Clock,
     TextField
+  },
+  setup() {
+    const app = useAppStore();
+    const { clickTimeSignature } = storeToRefs(app);
+    return { app, clickTimeSignature };
   },
   data() {
     return {
@@ -99,33 +106,35 @@ export default {
         playing: 'mdi-pause',
         paused: 'mdi-play',
         stopped: 'mdi-play'
-      }[this.$store.state.playState];
+      }[this.app.playState];
     },
+  
     clickBpm: {
       get() {
-        return this.$store.state.clickBpm;
+        return this.app.clickBpm;
       },
       set(value) {
-        this.$store.dispatch('toggleClickActive');
-        this.$store.dispatch('setClickBpm', value);
-        this.$store.dispatch('toggleClickActive');
+        this.app.toggleClickActive();
+        this.app.setClickBpm(value);
+        this.app.toggleClickActive();
       }
     },
-    clickTimeSignature: {
+    clickTimeSignatureView: {
       get() {
-        const { beats, unit } = this.$store.state.clickTimeSignature;
+        const beats = this.clickTimeSignature.beats;
+        const unit = this.clickTimeSignature.unit;
         return `${beats}/${unit}`;
       },
       set(value) {
         const [beats, unit] = value.split('/');
-        this.$store.dispatch('setClickTimeSignature', {
+        this.app.setClickTimeSignature({
           beats: Number(beats) || '',
           unit: Number(unit) || ''
         });
       }
     },
     timeValues() {
-      const playPosition = this.$store.state.playPosition;
+      const playPosition = this.app.playPosition;
       return [
         Math.floor(playPosition / 60),
         Math.floor(playPosition % 60),
@@ -133,25 +142,25 @@ export default {
       ];
     },
     beatsValues() {
-      return this.$store.getters.playBeatsPosition;
+      return this.app.playBeatsPosition;
     },
     controlEditMode() {
-      return this.$store.state.controlEditMode;
+      return this.app.controlEditMode;
     }
   },
   methods: {
     mapControlOrDispatchAction(controlName, actionName) {
       if (!this.controlEditMode) {
-        return this.$store.dispatch(actionName || controlName);
+        return this.app[actionName || controlName]();
       }
 
-      this.$store.dispatch('setControlEditSelected', controlName);
+      this.app.setControlEditSelected(controlName);
     },
     getControlMappingName(controlName) {
       if (!this.controlEditMode) {
         return;
       }
-      const controlMapping = this.$store.getters.getControlMapping(controlName);
+      const controlMapping = this.app.getControlMapping(controlName);
       if (controlMapping) {
         const name =
           {
@@ -170,7 +179,7 @@ export default {
       if (!this.controlEditMode) {
         return;
       }
-      const controlMapping = this.$store.getters.getControlMapping(controlName);
+      const controlMapping = this.app.getControlMapping(controlName);
       if (controlMapping) {
         return 'yellow';
       }
@@ -184,17 +193,17 @@ export default {
         tenths = 0;
       }
       const playPosition = minutes * 60 + seconds + tenths / 10;
-      this.$store.dispatch('playAt', playPosition);
+      this.app.playAt(playPosition);
     },
     setBeats({ values, index }) {
       let [bars, beats] = values;
       if (index === 0) {
         beats = 1;
       }
-      const clickInterval = getClickInterval(this.$store.state);
+      const clickInterval = getClickInterval(this.app);
       const playPosition =
         bars * clickInterval * 4 + (beats - 1) * clickInterval;
-      this.$store.dispatch('playAt', playPosition);
+      this.app.playAt(playPosition);
     },
     addTracks(files) {
       if (!files.length) {
@@ -206,7 +215,7 @@ export default {
         const fileReader = new FileReader();
         fileReader.readAsArrayBuffer(file);
         fileReader.addEventListener('load', () => {
-          this.$store.dispatch('addTrack', {
+          this.app.addTrack({
             name,
             arrayBuffer: fileReader.result
           });

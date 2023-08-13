@@ -44,13 +44,13 @@
               class="mr-4"
               small
               outlined
-              @click="$store.dispatch('toggleControlEditMode')"
+              @click="app.toggleControlEditMode()"
               >MIDI</VBtn
             >
             <VBtn
               small
               outlined
-              @click="$store.dispatch('toggleControlEditMode')"
+              @click="app.toggleControlEditMode()"
               >Key</VBtn
             >
           </VRow>
@@ -66,8 +66,15 @@
 
 <script>
 import { inputs } from '../midi';
+import { useAppStore } from '@/store/app';
+import { useSettingsStore } from '@/store/settings';
 
 export default {
+  setup() {
+    const app = useAppStore();
+    const settings = useSettingsStore();
+    return { app, settings };
+  },
   data() {
     return {
       outputs: [
@@ -81,50 +88,50 @@ export default {
   computed: {
     dialog: {
       get() {
-        return this.$store.state.dialog === 'settings';
+        return this.app.dialog === 'settings';
       },
       set() {
-        return this.$store.dispatch('toggleSettingsDialog');
+        return this.app.toggleSettingsDialog();
       }
     },
     trackPanning: {
       get() {
-        return this.$store.state.settings.trackPanning;
+        return this.settings.trackPanning;
       },
       set(value) {
-        return this.$store.dispatch('setTrackPanning', value);
+        return this.app.setTrackPanning(value);
       }
     },
     clickPanning: {
       get() {
-        return this.$store.state.settings.clickPanning;
+        return this.settings.clickPanning;
       },
       set(value) {
-        return this.$store.dispatch('setClickPanning', value);
+        return this.app.setClickPanning(value);
       }
     },
     clickGain: {
       get() {
-        return this.$store.state.settings.clickGainValue;
+        return this.settings.clickGainValue;
       },
       set(value) {
-        this.$store.dispatch('setClickGainValue', value);
+        this.app.setClickGainValue(value);
       }
     },
     trackGain: {
       get() {
-        return this.$store.state.settings.trackGainValue;
+        return this.settings.trackGainValue;
       },
       set(value) {
-        this.$store.dispatch('setMasterTrackGainValue', value);
+        this.app.setMasterTrackGainValue(value);
       }
     },
     midiDevice: {
       get() {
-        return this.$store.state.settings.midiDeviceName;
+        return this.settings.midiDeviceName;
       },
       set(value) {
-        this.$store.dispatch('setMidiDeviceName', value);
+        this.app.setMidiDeviceName(value);
       }
     }
   }

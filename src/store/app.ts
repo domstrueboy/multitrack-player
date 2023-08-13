@@ -1,7 +1,8 @@
 import { defineStore } from 'pinia';
+import { reactive } from 'vue';
 import type Track from '../Track';
 import type { TPlayingState } from '../types';
-
+import { useSettingsStore } from './settings';
 import {
   clickEventLoop,
   setClickEventLoopCount,
@@ -46,77 +47,32 @@ export const useAppStore = defineStore('app', {
     soloTrack: null,
     dialog: null,
     loading: true,
-    clickTimeSignature: {
+    clickTimeSignature: reactive({
       beats: 4,
       unit: 4
-    },
+    }),
     controlEditMode: null,
     controlEditSelected: null,
   }),
+    
   getters: {
-    getTrack(state) {
-      return (track: any) => state.tracks.find(_ => _ === track);
+    getTrack(state: TApp) {
+      return (track: Track) => state.tracks.find(_ => _ === track);
     },
-    playBeatsPosition(state) {
+
+    playBeatsPosition(state: TApp) {
       return getClickBeats(state);
     }
   },
+
   actions: {
-    setPlayState(value: TPlayingState): void {
-      this.playState = value;
-    },
-
-    addTrackMutation(track: Track): void {
-      this.tracks.push(track);
-    },
-
-    removeTrackMutation(track: Track): void {
-      this.tracks.splice(this.tracks.indexOf(track), 1);
-    },
-
-    setClickActive(value: boolean) {
-      this.clickActive = value;
-    },
-
-    setPlayPositionMutation(value: number): void {
-      this.playPosition = value;
-    },
-
-    setTrackActiveMutation({ track, value }: { track: Track, value: boolean }): void {
-      track.active = value;
-    },
-
-    setSoloTrackMutation(track: Track): void {
-      this.soloTrack = track;
-    },
-
-    setDialog(dialog: unknown): void {
-      this.dialog = dialog;
-    },
-
-    setClickBpmMutation(value: number): void {
-      this.clickBpm = value;
-    },
-
     setLoading(value: boolean): void {
       this.loading = value;
     },
-
-    setClickTimeSignatureMutation(value: { beats: number, unit: number }): void {
-      this.clickTimeSignature = value;
-    },
-    
-    setControlEditMode(value: unknown): void {
-      this.controlEditMode = value;
-    },
-
-    setControlEditSelectedMutation(value: unknown): void {
-      this.controlEditSelected = value;
-    },
-
+  
     playPause(): void {
       const newState: TPlayingState = 'playing';
-      this.setPlayState(newState);
+      this.playState = newState;
       if (tracksAudioContext.state === 'suspended') {
         tracksAudioContext.resume();
       }
@@ -128,79 +84,82 @@ export const useAppStore = defineStore('app', {
         this.tracks.forEach(track => track.pause());
       }
     },
-
+  
     playAt(playPosition: number): void {
-      this.setPlayPositionMutation(playPosition);
+      this.playPosition = playPosition;
       setClickEventLoopCount(
         Math.floor(playPosition / getClickInterval(this))
       );
       playTracks(this.tracks, this.playPosition);
     },
-
+  
     stop(): void {
       if (this.playState === 'playing') {
         this.tracks.forEach(track => track.stop());
       }
-      this.setPlayState('stopped');
-      this.setPlayPositionMutation(0);
+      this.playState = 'stopped';
+      this.playPosition = 0;
       setClickEventLoopCount(0);
       this.tracks.forEach(track => track.eventLoop(this.playPosition));
     },
-
+  
     addTrack({ name, arrayBuffer }: { name: string, arrayBuffer: ArrayBuffer }): void {
-      this.addTrackMutation(newTrack({ name, arrayBuffer }));
+      this.tracks.push(newTrack({ name, arrayBuffer }));
     },
-
+  
     removeTrack(track: Track): void {
-      this.removeTrackMutation(track);
+      this.tracks.splice(this.tracks.indexOf(track), 1);
     },
-
+  
     toggleClickActive(): void {
-      this.setClickActive(!this.clickActive);
+      this.clickActive = !this.clickActive;
     },
-
+  
     setTrackGainValue({ track, value }: { track: Track, value: number }): void {
       track.gainValue = value;
-      setTrackGain(track, this.settings, this);
+      const settings = useSettingsStore();
+      setTrackGain(track, settings, this);
     },
-
+  
     setTrackActive({ track, value }: { track: Track, value: boolean }): void {
-      this.setTrackActiveMutation({ track, value });
-      setTrackGain(track, this.settings, this);
+      track.active = value;
+      const settings = useSettingsStore();
+      setTrackGain(track, settings, this);
     },
-
+  
     setSoloTrack(track: Track): void {
-      this.setSoloTrackMutation(track);
-      this.tracks.forEach(track => setTrackGain(track, this.settings, this));
+      this.soloTrack = track;
+      const settings = useSettingsStore();
+      this.tracks.forEach(track => setTrackGain(track, settings, this));
     },
-
+  
     toggleSettingsDialog(): void {
-      this.setDialog(this.dialog === 'settings' ? null : 'settings');
+      this.dialog = this.dialog === 'settings' ? null : 'settings';
     },
-
+  
     toggleAboutDialog(): void {
-      this.setDialog(this.dialog === 'about' ? null : 'about');
+      this.dialog = this.dialog === 'about' ? null : 'about';
     },
-
+  
     setClickBpm(value: number): void {
-      this.setClickBpmMutation(value);
+      this.clickBpm = value;
     },
-
+  
     setClickTimeSignature(value: { beats: number, unit: number }): void {
-      this.setClickTimeSignatureMutation(value);
+      this.clickTimeSignature = value;
     },
-
+  
     toggleControlEditMode(): void {
-      this.setControlEditMode(!this.controlEditMode);
-      this.setDialog(null);
+      this.controlEditMode = !this.controlEditMode;
+      this.dialog = null;
     },
-
+  
     setControlEditSelected(value: unknown): void {
-      this.setControlEditSelectedMutation(value);
+      this.controlEditSelected = value;
     },
-
+  
     setPlayPosition(value: number): void {
-      this.setPlayPositionMutation(value);
+      this.playPosition = value;
     },
   }
 })

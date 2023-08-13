@@ -15,6 +15,7 @@
 
 <script>
 import { useAppStore } from '@/store/app';
+import { useSettingsStore } from '@/store/settings';
 import Controls from '@/components/Controls';
 
 import { initClick } from './click';
@@ -28,18 +29,20 @@ export default {
 
   setup() {
     const app = useAppStore();
+    const settings = useSettingsStore();
 
     return {
       app,
+      settings,
     }
   },
 
   async mounted() {
     await Promise.all([initMidi(), initClick()]);
-    await app.initSettings();
+    await this.settings.initSettings();
     initKeyEvents(app);
 
-    app.setLoading(false);
+    this.app.setLoading(false);
   },
 
   watch: {

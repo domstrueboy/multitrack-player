@@ -1,7 +1,7 @@
 <template>
   <div>
-    <Track
-      v-for="(track, index) in $store.state.tracks"
+    <TrackItem
+      v-for="(track, index) in app.tracks"
       :track="track"
       :number="index + 1"
       :key="track.id"
@@ -10,11 +10,16 @@
 </template>
 
 <script>
-import Track from './Track';
+import { useAppStore } from '@/store/app';
+import TrackItem from './TrackItem';
 
 export default {
   components: {
-    Track
+    TrackItem,
+  },
+  setup() {
+    const app = useAppStore();
+    return { app };
   },
 };
 </script>
