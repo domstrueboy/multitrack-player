@@ -42,14 +42,14 @@
           <VRow class="mt-2 ml-1">
             <VBtn
               class="mr-4"
-              small
-              outlined
+              size="small"
+              variant="outlined"
               @click="app.toggleControlEditMode()"
               >MIDI</VBtn
             >
             <VBtn
-              small
-              outlined
+              size="small"
+              variant="outlined"
               @click="app.toggleControlEditMode()"
               >Key</VBtn
             >
@@ -58,7 +58,7 @@
       </VCardText>
       <VCardActions>
         <VSpacer />
-        <VBtn text @click="dialog = false" color="primary">OK</VBtn>
+        <VBtn variant="text" @click="dialog = false" color="primary">OK</VBtn>
       </VCardActions>
     </VCard>
   </VDialog>

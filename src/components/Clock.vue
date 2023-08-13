@@ -1,6 +1,6 @@
 <template>
   <span class="text-center clock-container">
-    <VIcon>{{ icon }}</VIcon>
+    <VIcon :icon="icon" />
     <template v-for="(value, index) in values" :key="'value' + index">
       <TextField
         class="value"

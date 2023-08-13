@@ -8,9 +8,6 @@ dependencies:
   '@mdi/font':
     specifier: 7.2.96
     version: 7.2.96
-  '@mdi/js':
-    specifier: ^7.2.96
-    version: 7.2.96
   idb:
     specifier: ^7.1.1
     version: 7.1.1
@@ -33,8 +30,8 @@ dependencies:
     specifier: ^4.2.4
     version: 4.2.4(vue@3.3.4)
   vuetify:
-    specifier: ^3.3.8
-    version: 3.3.8(typescript@5.1.6)(vite-plugin-vuetify@1.0.2)(vue@3.3.4)
+    specifier: ^3.3.12
+    version: 3.3.12(typescript@5.1.6)(vite-plugin-vuetify@1.0.2)(vue@3.3.4)
   wavesurfer.js:
     specifier: ^7.0.3
     version: 7.0.3
@@ -67,6 +64,9 @@ devDependencies:
   eslint-plugin-vue:
     specifier: ^9.15.1
     version: 9.15.1(eslint@8.45.0)
+  eslint-plugin-vuetify:
+    specifier: ^2.0.5
+    version: 2.0.5(eslint@8.45.0)(vuetify@3.3.12)
   typescript:
     specifier: ^5.1.6
     version: 5.1.6
@@ -75,7 +75,7 @@ devDependencies:
     version: 4.4.4(@types/node@18.15.0)(sass@1.63.6)
   vite-plugin-vuetify:
     specifier: 1.0.2
-    version: 1.0.2(vite@4.4.4)(vue@3.3.4)(vuetify@3.3.8)
+    version: 1.0.2(vite@4.4.4)(vue@3.3.4)(vuetify@3.3.12)
   vue-tsc:
     specifier: ^1.8.5
     version: 1.8.5(typescript@5.1.6)
@@ -357,10 +357,6 @@ packages:
     resolution: {integrity: sha512-e//lmkmpFUMZKhmCY9zdjRe4zNXfbOIJnn6xveHbaV2kSw5aJ5dLXUxcRt1Gxfi7ZYpFLUWlkG2MGSFAiqAu7w==}
     dev: false
 
-  /@mdi/js@7.2.96:
-    resolution: {integrity: sha512-paR9M9ZT7rKbh2boksNUynuSZMHhqRYnEZOm/KrZTjQ4/FzyhjLHuvw/8XYzP+E7fS4+/Ms/82EN1pl/OFsiIA==}
-    dev: false
-
   /@nodelib/fs.scandir@2.1.5:
     resolution: {integrity: sha512-vq24Bq3ym5HEQm2NKCr3yXDwjc7vTsEThRDnkp2DK9p1uqLR+DHurm/NOTo0KG7HYHU7eppKZj3MyqYuMBf62g==}
     engines: {node: '>= 8'}
@@ -399,6 +395,7 @@ packages:
 
   /@types/webmidi@2.0.7:
     resolution: {integrity: sha512-BMVefNAum/swSmQJdTbRWBuDPeWT7fHAZEzmtY6eBl1ObvkWVzh39VvAFC8v9n7Y5XoOpWmeYzyUUVfmpq3ggQ==}
+    requiresBuild: true
     dev: false
     optional: true
 
@@ -687,7 +684,7 @@ packages:
       - typescript
     dev: true
 
-  /@vuetify/loader-shared@1.7.1(vue@3.3.4)(vuetify@3.3.8):
+  /@vuetify/loader-shared@1.7.1(vue@3.3.4)(vuetify@3.3.12):
     resolution: {integrity: sha512-kLUvuAed6RCvkeeTNJzuy14pqnkur8lTuner7v7pNE/kVhPR97TuyXwBSBMR1cJeiLiOfu6SF5XlCYbXByEx1g==}
     peerDependencies:
       vue: ^3.0.0
@@ -696,7 +693,7 @@ packages:
       find-cache-dir: 3.3.2
       upath: 2.0.1
       vue: 3.3.4
-      vuetify: 3.3.8(typescript@5.1.6)(vite-plugin-vuetify@1.0.2)(vue@3.3.4)
+      vuetify: 3.3.12(typescript@5.1.6)(vite-plugin-vuetify@1.0.2)(vue@3.3.4)
 
   /acorn-jsx@5.3.2(acorn@8.10.0):
     resolution: {integrity: sha512-rq9s+JNhf0IChjtDXxllJ7g41oZk5SlXtp0LHwyA5cejwn7vKmKp4pPri6YEePv2PU65sAsegbXtIinmDFDXgQ==}
@@ -930,6 +927,20 @@ packages:
       semver: 7.5.4
       vue-eslint-parser: 9.3.1(eslint@8.45.0)
       xml-name-validator: 4.0.0
+    transitivePeerDependencies:
+      - supports-color
+    dev: true
+
+  /eslint-plugin-vuetify@2.0.5(eslint@8.45.0)(vuetify@3.3.12):
+    resolution: {integrity: sha512-pDWOLCO6FndzuzJDdoHPLOeGaVnFslWkAkLJ1R0GW9UXEUrW1yu73+EuChg5FRxTDUFWRe9Z7dnVw00p04gvxQ==}
+    peerDependencies:
+      eslint: ^8.0.0
+      vuetify: ^3.0.0
+    dependencies:
+      eslint: 8.45.0
+      eslint-plugin-vue: 9.15.1(eslint@8.45.0)
+      requireindex: 1.2.0
+      vuetify: 3.3.12(typescript@5.1.6)(vite-plugin-vuetify@1.0.2)(vue@3.3.4)
     transitivePeerDependencies:
       - supports-color
     dev: true
@@ -1255,6 +1266,7 @@ packages:
   /jazz-midi@1.7.9:
     resolution: {integrity: sha512-c8c4BBgwxdsIr1iVm53nadCrtH7BUlnX3V95ciK/gbvXN/ndE5+POskBalXgqlc/r9p2XUbdLTrgrC6fou5p9w==}
     engines: {node: '>=10.0.0'}
+    requiresBuild: true
     dev: false
     optional: true
 
@@ -1535,6 +1547,11 @@ packages:
     resolution: {integrity: sha512-CiD3ZSanZqcMPRhtfct5K9f7i3OLCcBBWsJjLh1gW9RO/nS94sVzY59iS+fgYBOBqaBpf4EzfqUF3j9IG+xo8A==}
     dev: false
 
+  /requireindex@1.2.0:
+    resolution: {integrity: sha512-L9jEkOi3ASd9PYit2cwRfyppc9NoABujTP8/5gFcbERmo5jUoAKovIC3fsF17pkTnGsrByysqX+Kxd2OTNI1ww==}
+    engines: {node: '>=0.10.5'}
+    dev: true
+
   /resolve-from@4.0.0:
     resolution: {integrity: sha512-pb/MYmXstAkysRFx8piNI1tGFNQIFA3vkE3Gq4EuA1dF6gHp/+vgZqsCGJapvy8N3Q+4o7FwvquPJcnZ7RYy4g==}
     engines: {node: '>=4'}
@@ -1689,18 +1706,18 @@ packages:
     resolution: {integrity: sha512-EPD5q1uXyFxJpCrLnCc1nHnq3gOa6DZBocAIiI2TaSCA7VCJ1UJDMagCzIkXNsUYfD1daK//LTEQ8xiIbrHtcw==}
     dev: true
 
-  /vite-plugin-vuetify@1.0.2(vite@4.4.4)(vue@3.3.4)(vuetify@3.3.8):
+  /vite-plugin-vuetify@1.0.2(vite@4.4.4)(vue@3.3.4)(vuetify@3.3.12):
     resolution: {integrity: sha512-MubIcKD33O8wtgQXlbEXE7ccTEpHZ8nPpe77y9Wy3my2MWw/PgehP9VqTp92BLqr0R1dSL970Lynvisx3UxBFw==}
     engines: {node: '>=12'}
     peerDependencies:
       vite: ^2.7.0 || ^3.0.0 || ^4.0.0
       vuetify: ^3.0.0-beta.4
     dependencies:
-      '@vuetify/loader-shared': 1.7.1(vue@3.3.4)(vuetify@3.3.8)
+      '@vuetify/loader-shared': 1.7.1(vue@3.3.4)(vuetify@3.3.12)
       debug: 4.3.4
       upath: 2.0.1
       vite: 4.4.4(@types/node@18.15.0)(sass@1.63.6)
-      vuetify: 3.3.8(typescript@5.1.6)(vite-plugin-vuetify@1.0.2)(vue@3.3.4)
+      vuetify: 3.3.12(typescript@5.1.6)(vite-plugin-vuetify@1.0.2)(vue@3.3.4)
     transitivePeerDependencies:
       - supports-color
       - vue
@@ -1811,8 +1828,8 @@ packages:
       '@vue/server-renderer': 3.3.4(vue@3.3.4)
       '@vue/shared': 3.3.4
 
-  /vuetify@3.3.8(typescript@5.1.6)(vite-plugin-vuetify@1.0.2)(vue@3.3.4):
-    resolution: {integrity: sha512-m88MUczIeyNXfINnklBhat2fRknOUmeWyxgGTOZI5b95j9JTZwPH0b1z979nS6gJIyhPDVTuZSS/abp5aUyGBA==}
+  /vuetify@3.3.12(typescript@5.1.6)(vite-plugin-vuetify@1.0.2)(vue@3.3.4):
+    resolution: {integrity: sha512-mH3CF+ALM1sC0Zm91IPq5b+bummrHH/Ek9jwYrQ0+fOAoJWd9nUcOIHODTPY+PODJDbJTwF6b3wVTDwqzUgTgQ==}
     engines: {node: ^12.20 || >=14.13}
     peerDependencies:
       typescript: '>=4.7'
@@ -1831,7 +1848,7 @@ packages:
         optional: true
     dependencies:
       typescript: 5.1.6
-      vite-plugin-vuetify: 1.0.2(vite@4.4.4)(vue@3.3.4)(vuetify@3.3.8)
+      vite-plugin-vuetify: 1.0.2(vite@4.4.4)(vue@3.3.4)(vuetify@3.3.12)
       vue: 3.3.4
 
   /wavesurfer.js@7.0.3:

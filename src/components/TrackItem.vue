@@ -6,16 +6,16 @@
           <VTextField v-model="track.name" />
           <VRow dense justify="space-between">
             <VBtn
-              :outlined="!track.active"
+              :variant="!track.active ? 'outlined' : null"
               :color="activeColor"
               @click="toggleActive"
               >{{ number }}</VBtn
             >
-            <VBtn :outlined="!solo" color="primary" @click="toggleSolo"
+            <VBtn :variant="!solo ? 'outlined' : null" color="primary" @click="toggleSolo"
               >Solo</VBtn
             >
             <VBtn icon @click="remove">
-              <VIcon>mdi-delete</VIcon>
+              <VIcon icon="mdi-delete" />
             </VBtn>
           </VRow>
           <VSlider

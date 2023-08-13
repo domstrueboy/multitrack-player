@@ -1,27 +1,31 @@
 <template>
   <VRow justify="end" align="center">
+
     <VFileInput
       @change="addTracks"
-      :value="files"
+      :model-value="files"
       multiple
       placeholder="Add audio files"
       accept="audio/*"
       hide-details
     />
+
     <VBtn
       v-if="controlEditMode"
-      small
+      size="small"
       @click="app.toggleControlEditMode()"
       >Done mapping</VBtn
     >
+
     <VBtn
       icon
       @click="mapControlOrDispatchAction('playPause')"
       :title="getControlMappingName('playPause')"
       :color="app.playState === 'playing' ? 'yellow' : 'green'"
     >
-      <VIcon>{{ playPauseIcon }}</VIcon>
+      <VIcon :icon="playPauseIcon" />
     </VBtn>
+
     <VBtn
       icon
       @click="mapControlOrDispatchAction('stop')"
@@ -29,17 +33,17 @@
       color="red"
       :disabled="app.playState === 'stopped'"
     >
-      <VIcon>{{ mdiStop }}</VIcon>
+      <VIcon icon="mdi-stop" />
     </VBtn>
 
     <VBtn
       icon
-      :outlined="app.clickActive"
+      :variant="app.clickActive ? 'outlined' : null"
       @click="mapControlOrDispatchAction('clickActive', 'toggleClickActive')"
       :title="getControlMappingName('clickActive')"
       :color="getControlMappingColor('clickActive')"
     >
-      <VIcon>{{ mdiMetronome }}</VIcon>
+      <VIcon icon="mdi-metronome" />
     </VBtn>
 
     <TextField v-model="clickBpm" class="small-input" />
@@ -48,17 +52,17 @@
     <Clock
       :values="timeValues"
       @input="setTime"
-      :icon="mdiClockOutline"
+      icon="mdi-clock-outline"
       class="mr-4"
     />
 
-    <Clock :values="beatsValues" :icon="mdiMusicNote" @input="setBeats" />
+    <Clock :values="beatsValues" icon="mdi-music-note" @input="setBeats" />
 
-    <VBtn text icon @click="app.toggleSettingsDialog()">
-      <VIcon>{{ mdiWrench }}</VIcon>
+    <VBtn variant="text" icon @click="app.toggleSettingsDialog()">
+      <VIcon icon="mdi-wrench" />
     </VBtn>
-    <VBtn text icon @click="app.toggleAboutDialog()">
-      <VIcon>{{ mdiInformation }}</VIcon>
+    <VBtn variant="text" icon @click="app.toggleAboutDialog()">
+      <VIcon icon="mdi-information" />
     </VBtn>
   </VRow>
 </template>
@@ -67,16 +71,7 @@
 import { storeToRefs } from 'pinia';
 import Clock from './Clock';
 import TextField from './TextField';
-import {
-  mdiMetronome,
-  mdiStop,
-  mdiWrench,
-  mdiInformation,
-  mdiMusicNote,
-  mdiClockOutline
-} from '@mdi/js';
 import { useAppStore } from '@/store/app';
-
 import { getClickInterval } from '../click';
 
 export default {
@@ -91,12 +86,6 @@ export default {
   },
   data() {
     return {
-      mdiStop,
-      mdiMetronome,
-      mdiWrench,
-      mdiInformation,
-      mdiMusicNote,
-      mdiClockOutline,
       files: [],
     };
   },
@@ -104,7 +93,7 @@ export default {
     playPauseIcon() {
       return {
         playing: 'mdi-pause',
-        paused: 'mdi-play',
+        suspended: 'mdi-play',
         stopped: 'mdi-play'
       }[this.app.playState];
     },
