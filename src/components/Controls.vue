@@ -1,13 +1,13 @@
 <template v-slot:append>
 
-    <input
-      type="file"
-      @change="addTracks"
+    <VFileInput
+      @update:modelValue="addTracks"
       :model-value="files"
       multiple
       label="Add audio files"
       accept="audio/*"
     />
+    {{ files }}
 
     <VBtn
       v-if="controlEditMode"

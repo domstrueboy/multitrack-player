@@ -42,11 +42,16 @@
 
 <script>
 import Track from '../Track';
+import { useAppStore } from '@/store/app'
 
 export default {
   props: {
     number: Number,
     track: Track
+  },
+  setup() {
+    const app = useAppStore();
+    return { app };
   },
   mounted() {},
   computed: {
@@ -55,17 +60,17 @@ export default {
         return this.track.gainValue;
       },
       set(value) {
-        return this.$store.setTrackGainValue({
+        return this.app.setTrackGainValue({
           track: this.track,
           value
         });
       }
     },
     solo() {
-      return this.$store.state.soloTrack === this.track;
+      return this.app.soloTrack === this.track;
     },
     activeColor() {
-      const soloTrack = this.$store.state.soloTrack;
+      const soloTrack = this.app.soloTrack;
       return soloTrack === this.track || soloTrack === null
         ? 'primary'
         : 'accent';
@@ -87,16 +92,16 @@ export default {
   },
   methods: {
     remove() {
-      this.$store.removeTrack(this.track);
+      this.app.removeTrack(this.track);
     },
     toggleActive() {
-      this.$store.setTrackActive({
+      this.app.setTrackActive({
         track: this.track,
         value: !this.track.active
       });
     },
     toggleSolo() {
-      this.$store.setSoloTrack(this.solo ? null : this.track);
+      this.app.setSoloTrack(this.solo ? null : this.track);
     }
   }
 };

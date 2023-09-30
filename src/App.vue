@@ -41,8 +41,7 @@ export default {
   async mounted() {
     await Promise.all([initMidi(), initClick()]);
     await this.settings.initSettings();
-    initKeyEvents(app);
-
+    initKeyEvents(this.app);
     this.app.setLoading(false);
   },
 
