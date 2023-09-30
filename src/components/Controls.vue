@@ -1,13 +1,12 @@
-<template>
-  <VRow justify="end" align="center">
+<template v-slot:append>
 
-    <VFileInput
+    <input
+      type="file"
       @change="addTracks"
       :model-value="files"
       multiple
-      placeholder="Add audio files"
+      label="Add audio files"
       accept="audio/*"
-      hide-details
     />
 
     <VBtn
@@ -61,10 +60,7 @@
     <VBtn variant="text" icon @click="app.toggleSettingsDialog()">
       <VIcon icon="mdi-wrench" />
     </VBtn>
-    <VBtn variant="text" icon @click="app.toggleAboutDialog()">
-      <VIcon icon="mdi-information" />
-    </VBtn>
-  </VRow>
+
 </template>
 
 <script>
@@ -218,6 +214,6 @@ export default {
 
 <style lang="scss" scoped>
 .small-input {
-  max-width: 4rem;
+  // max-width: 4rem;
 }
 </style>

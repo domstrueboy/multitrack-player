@@ -55,7 +55,7 @@ export default {
         return this.track.gainValue;
       },
       set(value) {
-        return this.$store.dispatch('setTrackGainValue', {
+        return this.$store.setTrackGainValue({
           track: this.track,
           value
         });
@@ -87,16 +87,16 @@ export default {
   },
   methods: {
     remove() {
-      this.$store.dispatch('removeTrack', this.track);
+      this.$store.removeTrack(this.track);
     },
     toggleActive() {
-      this.$store.dispatch('setTrackActive', {
+      this.$store.setTrackActive({
         track: this.track,
         value: !this.track.active
       });
     },
     toggleSolo() {
-      this.$store.dispatch('setSoloTrack', this.solo ? null : this.track);
+      this.$store.setSoloTrack(this.solo ? null : this.track);
     }
   }
 };

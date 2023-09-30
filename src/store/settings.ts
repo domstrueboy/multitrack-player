@@ -61,7 +61,7 @@ export const useSettingsStore = defineStore('settings', {
     setMidiDeviceName(value: string): void {
       this.midiDeviceName = value;
       const app = useAppStore();
-      initMidiEvents(value, { rootState: app, dispatch });
+      initMidiEvents(value, app);
       saveSettings();
     },
 
@@ -89,10 +89,11 @@ export const useSettingsStore = defineStore('settings', {
     },
 
     async initSettings() {
+      const app = useAppStore();
       const settings = await get('settings');
       Object.assign(this, settings);
       if (this.midiDeviceName) {
-        initMidiEvents(this.midiDeviceName, { rootState, dispatch });
+        initMidiEvents(this.midiDeviceName, app);
       }
     },
   }

@@ -1,14 +1,15 @@
 <template>
   <div>
     <VProgressLinear v-if="app.loading" indeterminate />
+
     <VApp v-else>
-      <VAppBar height="auto" class="app-bar">
+      <VAppBar>
         <Controls />
       </VAppBar>
 
-      <v-main>
-        <router-view />
-      </v-main>
+      <VMain>
+        <RouterView />
+      </VMain>
     </VApp>
   </div>
 </template>
@@ -52,9 +53,3 @@ export default {
   }
 };
 </script>
-
-<style lang="scss" scoped>
-.app-bar {
-  flex-grow: 0;
-}
-</style>

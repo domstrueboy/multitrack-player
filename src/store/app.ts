@@ -137,10 +137,6 @@ export const useAppStore = defineStore('app', {
       this.dialog = this.dialog === 'settings' ? null : 'settings';
     },
   
-    toggleAboutDialog(): void {
-      this.dialog = this.dialog === 'about' ? null : 'about';
-    },
-  
     setClickBpm(value: number): void {
       this.clickBpm = value;
     },

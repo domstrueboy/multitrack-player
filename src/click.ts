@@ -32,13 +32,13 @@ export async function initClick() {
 }
 
 export function clickEventLoop(store) {
-  const { beats, unit } = store.state.clickTimeSignature;
+  const { beats, unit } = store.clickTimeSignature;
   if (!beats || !unit) {
     return;
   }
 
-  const clickInterval = getClickInterval(store.state);
-  if (store.state.playPosition / eventLoopCount > clickInterval) {
+  const clickInterval = getClickInterval(store);
+  if (store.playPosition / eventLoopCount > clickInterval) {
     const bufferSource = audioContext.createBufferSource();
     bufferSource
       .connect(gainNode)
